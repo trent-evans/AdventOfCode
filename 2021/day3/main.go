@@ -8,16 +8,41 @@ import (
 	"strconv"
 )
 
-func filterList(numList []string, bitIdx int, mostCommonSearch bool) string {
+func filterList(numList []string, bitIdx int, isOxygen bool) string {
 	if len(numList) == 1 || len(numList[0]) == bitIdx {
 		return numList[0]
 	} else {
-		/**
-		- Fill in the recursion here
-		*/
-		numList = numList
+
+		var zeroList []string
+		var oneList []string
+
+		for _, num := range numList {
+			if num[bitIdx] == '1' {
+				oneList = append(oneList, num)
+			} else {
+				zeroList = append(zeroList, num)
+			}
+		}
+
+		if isOxygen { // 1s prevail in a tie
+			if len(oneList) >= len(zeroList) {
+				numList = oneList
+			} else {
+				numList = zeroList
+			}
+		} else { // Must be CO2 - 0s prevail in a tie
+			if len(zeroList) >= len(oneList) {
+				numList = zeroList
+			} else {
+				numList = oneList
+			}
+		}
+
+		var outputstring = fmt.Sprintf("Is Oxygen: %t ListLength: %d BitIdx: %d \n", isOxygen, +len(numList), bitIdx)
+		fmt.Println(outputstring)
+
 		bitIdx++
-		return filterList(numList, bitIdx, mostCommonSearch)
+		return filterList(numList, bitIdx, isOxygen)
 	}
 }
 
@@ -76,6 +101,8 @@ func main() {
 	fmt.Println(epsilonVal)
 	fmt.Println("Product Value:")
 	fmt.Println(gammaVal * epsilonVal)
+	fmt.Println("")
+	fmt.Println("")
 
 	// Part 2
 
@@ -89,6 +116,11 @@ func main() {
 			co2Data = append(co2Data, record)
 		}
 	}
+
+	var oxygenLength = fmt.Sprintf("Oxygen length: %d", len(oxygenData))
+	fmt.Println(oxygenLength)
+	var co2Length = fmt.Sprintf("CO2 length: %d", len(co2Data))
+	fmt.Println(co2Length)
 
 	oxygenOut := filterList(oxygenData, 1, true)
 	co2Out := filterList(co2Data, 1, false)
