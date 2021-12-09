@@ -9,6 +9,9 @@ import (
 )
 
 func filterList(numList []string, bitIdx int, isOxygen bool) string {
+	//var outputstring = fmt.Sprintf("Is Oxygen: %t ListLength: %d BitIdx: %d \n", isOxygen, +len(numList), bitIdx)
+	//fmt.Println(outputstring)
+
 	if len(numList) == 1 || len(numList[0]) == bitIdx {
 		return numList[0]
 	} else {
@@ -31,15 +34,12 @@ func filterList(numList []string, bitIdx int, isOxygen bool) string {
 				numList = zeroList
 			}
 		} else { // Must be CO2 - 0s prevail in a tie
-			if len(zeroList) >= len(oneList) {
+			if len(zeroList) <= len(oneList) {
 				numList = zeroList
 			} else {
 				numList = oneList
 			}
 		}
-
-		var outputstring = fmt.Sprintf("Is Oxygen: %t ListLength: %d BitIdx: %d \n", isOxygen, +len(numList), bitIdx)
-		fmt.Println(outputstring)
 
 		bitIdx++
 		return filterList(numList, bitIdx, isOxygen)
@@ -116,11 +116,6 @@ func main() {
 			co2Data = append(co2Data, record)
 		}
 	}
-
-	var oxygenLength = fmt.Sprintf("Oxygen length: %d", len(oxygenData))
-	fmt.Println(oxygenLength)
-	var co2Length = fmt.Sprintf("CO2 length: %d", len(co2Data))
-	fmt.Println(co2Length)
 
 	oxygenOut := filterList(oxygenData, 1, true)
 	co2Out := filterList(co2Data, 1, false)
