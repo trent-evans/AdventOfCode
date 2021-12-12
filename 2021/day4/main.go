@@ -26,15 +26,18 @@ type bingoBoard struct {
 	hasBingo     bool
 }
 
-func markSpace(value int, board *bingoBoard) bool {
-	coords, isPresent := board.spaceMap[value]
-	if isPresent {
-		board.spaces[coords.row][coords.col].isMarked = true
-		board.spacesMarked += 1
-		fmt.Println(fmt.Sprintf("Spaces Marked: %d", board.spacesMarked))
+var boardList []bingoBoard
 
-		if board.spacesMarked >= 5 {
-			board.hasBingo = doesBoardHaveBingo(coords, *board)
+func markSpace(value int, idx int) bool {
+
+	coords, isPresent := boardList[idx].spaceMap[value]
+	if isPresent {
+		boardList[idx].spaces[coords.row][coords.col].isMarked = true
+		boardList[idx].spacesMarked += 1
+		// fmt.Println(fmt.Sprintf("Spaces Marked: %d", boardList[idx].spacesMarked))
+
+		if boardList[idx].spacesMarked >= 5 {
+			boardList[idx].hasBingo = doesBoardHaveBingo(coords, boardList[idx])
 		}
 	}
 	return isPresent
@@ -116,9 +119,8 @@ func main() {
 
 	//var bingoBoardList []bingoBoard
 
-	fmt.Println(len(boardStrings))
+	// fmt.Println(len(boardStrings))
 
-	var boardList []bingoBoard
 	var newBoard = new(bingoBoard)
 	newBoard.spaceMap = make(map[int]indexPair)
 	newBoard.spacesMarked = 0
@@ -161,25 +163,34 @@ func main() {
 
 	//fmt.Println(len(boardList))
 
-	for x, num := range callNumbers {
-		fmt.Println(fmt.Sprintf("Idx: %d - CallNum: %d", x, num))
+	// Part 1 - Find the first board that will win
+	gameEnd := false
 
-		for idx, board := range boardList {
-			if markSpace(num, &board) {
-				fmt.Println(fmt.Sprintf("Value added to Board ID: %d  - Num values: %d", idx, board.spacesMarked))
+	for _, num := range callNumbers {
+		//fmt.Println(fmt.Sprintf("Idx: %d - CallNum: %d", x, num))
+
+		for boardIdx, _ := range boardList {
+			if markSpace(num, boardIdx) {
+				//fmt.Println(fmt.Sprintf("Value added to Board ID: %d  - Num values: %d", boardIdx, board.spacesMarked))
 			}
 
-			if board.hasBingo {
-				unmarkedSum := board.addUnmarked()
+			if boardList[boardIdx].hasBingo {
+				unmarkedSum := boardList[boardIdx].addUnmarked()
 
 				finalScore := unmarkedSum * num
 
 				// scoreOut := fmt.Sprintf("Final Score: %d -- Sum: %d LastCalled: %d", finalScore, unmarkedSum, num)
 				// fmt.Println(scoreOut)
 				fmt.Println(fmt.Sprintf("Final Score: %d -- Sum: %d LastCalled: %d", finalScore, unmarkedSum, num))
+				gameEnd = true
 				break
 			}
 		}
+		if gameEnd {
+			break
+		}
 	}
+
+	// Part 2 - Find the last board that will win
 
 }
