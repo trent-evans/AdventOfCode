@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -19,7 +20,7 @@ func main() {
 
 	filename := "2021/day5/example.txt"
 
-	file, err := os.Open("2021/day5/example.txt")
+	file, err := os.Open(filename)
 
 	if err != nil {
 		log.Fatal(err)
@@ -35,6 +36,8 @@ func main() {
 		entry := scanner.Text()
 		entry = strings.Replace(entry, "->", " ", -1)
 		entry = strings.Replace(entry, ",", " ", -1)
+
+		fmt.Println(entry)
 
 		valuesSplit := strings.Fields(entry)
 
@@ -62,10 +65,12 @@ func main() {
 		ventList = append(ventList, newLine)
 	}
 
-	bound := 1000 // For the full size
-	var thermalField [1000][1000]int
+	fmt.Println(len(ventList))
 
-	if strings.Contains(filename, "example") {
-		bound = 10
-	}
+	// bound := 1000 // For the full size
+	// var thermalField [1000][1000]int
+
+	// if strings.Contains(filename, "example") {
+	// 	bound = 10
+	// }
 }
