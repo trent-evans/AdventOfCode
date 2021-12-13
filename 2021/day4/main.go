@@ -165,8 +165,9 @@ func main() {
 
 	// Part 1 - Find the first board that will win
 	gameEnd := false
+	lastCallIdx := 0
 
-	for _, num := range callNumbers {
+	for idx, num := range callNumbers {
 		//fmt.Println(fmt.Sprintf("Idx: %d - CallNum: %d", x, num))
 
 		for boardIdx, _ := range boardList {
@@ -181,8 +182,10 @@ func main() {
 
 				// scoreOut := fmt.Sprintf("Final Score: %d -- Sum: %d LastCalled: %d", finalScore, unmarkedSum, num)
 				// fmt.Println(scoreOut)
-				fmt.Println(fmt.Sprintf("Final Score: %d -- Sum: %d LastCalled: %d", finalScore, unmarkedSum, num))
+				fmt.Println(fmt.Sprintf("First winner final Score: %d -- Sum: %d LastCalled: %d", finalScore, unmarkedSum, num))
 				gameEnd = true
+
+				lastCallIdx = idx
 				break
 			}
 		}
@@ -191,6 +194,47 @@ func main() {
 		}
 	}
 
+	var numBingos = 1 // Since we'll have one bingo left over from up above
+	gameEnd = false
+
 	// Part 2 - Find the last board that will win
+	// The trick to this is to remember that we already have some information in each board because of how this was done
+	for i := lastCallIdx; i < len(callNumbers); i++ {
+		//fmt.Println(fmt.Sprintf("Idx: %d - CallNum: %d", x, num))
+
+		num := callNumbers[i]
+		for boardIdx, _ := range boardList {
+
+			if boardList[boardIdx].hasBingo { // If a board already has bingo, skip it
+				continue
+			}
+
+			if markSpace(num, boardIdx) {
+				//fmt.Println(fmt.Sprintf("Value added to Board ID: %d  - Num values: %d", boardIdx, board.spacesMarked))
+			}
+
+			if boardList[boardIdx].hasBingo && numBingos < len(boardList) { // As long as there is a board without bingo, keep going
+				numBingos++
+				//fmt.Println(fmt.Sprintf("Number of bingos: %d -- Most Recent Board Idx: %d", numBingos, boardIdx))
+			}
+
+			if numBingos == len(boardList) {
+
+				unmarkedSum := boardList[boardIdx].addUnmarked()
+				finalScore := unmarkedSum * num
+
+				// scoreOut := fmt.Sprintf("Final Score: %d -- Sum: %d LastCalled: %d", finalScore, unmarkedSum, num)
+				// fmt.Println(scoreOut)
+				fmt.Println(fmt.Sprintf("Last winner final Score: %d -- Sum: %d LastCalled: %d", finalScore, unmarkedSum, num))
+				gameEnd = true
+				break
+
+			}
+		}
+
+		if gameEnd {
+			break
+		}
+	}
 
 }
