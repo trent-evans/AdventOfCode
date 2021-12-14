@@ -43,7 +43,7 @@ func printThermalField(thermalField [1000][1000]int, bounds int) {
 
 func main() {
 
-	filename := "2021/day5/example.txt"
+	filename := "2021/day5/input.txt"
 
 	file, err := os.Open(filename)
 
@@ -140,88 +140,63 @@ func main() {
 	fmt.Println(fmt.Sprintf("Danger points: %d", dangerZones))
 	fmt.Println(fmt.Sprintf("Diagonal vents: %d", diagnonalLines))
 
-	// Part 2
+	// Part 2 - It's all about the relationship between point 1 and point 2
 	for _, vent := range ventList {
 		if vent.x1 == vent.x2 || vent.y1 == vent.y2 { // Already considered in part 1
 			continue
 		}
 
-		x1 := vent.x1
+		x := vent.x1
 		x2 := vent.x2
-		y1 := vent.y1
+		y := vent.y1
 		y2 := vent.y2
 
-		xDiff := x2 - x1
-		yDiff := y2 - y1
+		xDiff := x2 - x
+		yDiff := y2 - y
 
-		fmt.Println(fmt.Sprintf("xDiff: %d -- yDiff: %d", xDiff, yDiff))
+		// fmt.Println("")
+		// fmt.Println("")
+		// fmt.Println(fmt.Sprintf("xDiff: %d -- yDiff: %d", xDiff, yDiff))
 
 		// Increment by 1s at a 45 degree - probably a better way to do this but this is easy
 		if xDiff < 0 {
 
-			var x = x2
-
 			if yDiff < 0 {
-				fmt.Println("xDiff and yDiff are negative")
 
-				var y = y2
-				fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
+				for x >= x2 && y >= y2 {
 
-				for x >= x1 && y >= y1 {
-
-					fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
 					thermalField[x][y]++
 
 					x--
 					y--
 				}
-
 			} else {
-				fmt.Println("xDiff is negative, yDiff is positive")
 
-				var y = y1
-				fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
-
-				for x >= x1 && y <= y2 {
-					fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
+				for x >= x2 && y <= y2 {
 					thermalField[x][y]++
 
 					x--
 					y++
 				}
 			}
-
 		} else {
-			var x = x1
 
 			if yDiff < 0 {
-				fmt.Println("xDiff is positive, yDiff is negative")
 
-				var y = y2
-				fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
-
-				for x <= x2 && y >= y1 {
-					fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
+				for x <= x2 && y >= y2 {
 					thermalField[x][y]++
 
 					x++
 					y--
 				}
-
 			} else {
-				fmt.Println("xDiff and yDiff are both positive")
 
-				var y = y1
-				fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
-
-				for x <= x2 && y <= y1 {
-					fmt.Println(fmt.Sprintf("\tx: %d \ty: %d", x, y))
+				for x <= x2 && y <= y2 {
 					thermalField[x][y]++
 
 					x++
 					y++
 				}
-
 			}
 		}
 	}
