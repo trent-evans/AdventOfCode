@@ -62,7 +62,8 @@ func main() {
 	}
 
 	mapDays := 256
-	// Part 2 - This is the better way to do part 1, but this is something I should have figured out earlier
+	// Part 2 - This is also the better way to do part 1, but this is something I should have figured out earlier
+	// Part 1 was initially a bunch of looping.  But I'm past that now
 	for i := 1; i <= mapDays; i++ {
 
 		numNewAndRolloverFish := fishDaysMap[0]
